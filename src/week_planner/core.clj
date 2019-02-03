@@ -6,4 +6,5 @@
    :body "Week plan will go here"})
 
 (defn -main [& args]
-  (jetty/run-jetty plan {:port 9000}))
+  (jetty/run-jetty plan {:port (Integer/parseInt (System/getenv "PORT"))}))
+
