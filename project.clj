@@ -2,7 +2,8 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
-                 [hiccup "2.0.0-alpha2"]]
+                 [hiccup "2.0.0-alpha2"]
+                 [org.jsoup/jsoup "1.11.3"]]
   :min-lein-version "2.0.0"
   :main week-planner.core
   :aot [week-planner.core]
