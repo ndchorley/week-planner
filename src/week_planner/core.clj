@@ -15,8 +15,6 @@
      (:date-time event) " "
      [:a {:href (:url event)} "More info"]])
 
-  (def met-walkers-events (ramblers/get-events "IL50"))
-
   {:status 200
    :body (str
           (hiccup/html5
@@ -24,4 +22,4 @@
             [:title "Week plan"]]
            [:body
             [:h1 "Week plan"]
-            (map to-para met-walkers-events)]))})
+            (map to-para (ramblers/get-events (:met-walkers ramblers/group-ids)))]))})
