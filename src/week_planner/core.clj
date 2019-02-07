@@ -4,19 +4,37 @@
               [clojure.string :as str])
     (:import [org.jsoup Jsoup]))
 
-(defn get-met-walkers-events []
-  (def document (.get (Jsoup/connect "https://www.metropolitan-walkers.org.uk/walks/upcoming-walks.html")))
+
+(defn get-ramblers-events [group-id]
+  (def document (.get (Jsoup/connect
+                       (str "https://www.ramblers.org.uk/find-a-walk.aspx?layer=walks&tab=walks&group=" group-id))))
+
+  (def elements (.getElementsByClass document "details"))
 
   (defn to-event [element]
-    (def field-parts (str/split (.text element) (re-pattern ",")))
+    (def a-element (first (.getElementsByTag element "a")))
+    (def subtitles (.getElementsByClass element "subtitle"))
 
-    {:date (str/join (take 2 field-parts))
-     :title (str/trim (str/join (take-last 2 field-parts)))})
+    (def url (.get (.attributes a-element) "href"))
+    (def date-time (str
+                    (str/replace (.text (first subtitles)) (re-pattern " \\(.*\\)") "")
+                    (str/replace (.text (second subtitles)) "Start time" "")))
 
-  (map to-event (.getElementsByClass document "walksummary")))
+    (def route (.text a-element))
+    (def title (str route ", " (.text (last subtitles))))
+
+    {:url url :title title :date-time date-time})
+
+  (map to-event elements))
 
 (defn plan [request]
-  (defn to-para [event] [:p [:b (:title event)] ", " (:date event)])
+  (defn to-para [event]
+    [:p
+     [:b (:title event)] ", "
+     (:date-time event) " "
+     [:a {:href (:url event)} "More info"]])
+
+  (def met-walkers-events (get-ramblers-events "IL50"))
 
   {:status 200
    :body (str
@@ -25,7 +43,7 @@
             [:title "Week plan"]]
            [:body
             [:h1 "Week plan"]
-            (map to-para (get-met-walkers-events))]))})
+            (map to-para met-walkers-events)]))})
 
 (defn -main [& args]
   (jetty/run-jetty plan {:port (Integer/parseInt (System/getenv "PORT"))}))
