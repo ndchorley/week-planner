@@ -3,12 +3,14 @@
               [hiccup.page :as hiccup]
               [week-planner.ramblers :as ramblers]))
 
-(declare plan)
+(declare plan make-plan)
 
 (defn -main [& args]
-  (jetty/run-jetty plan {:port (Integer/parseInt (System/getenv "PORT"))}))
+  (jetty/run-jetty
+   (partial plan make-plan)
+   {:port (Integer/parseInt (System/getenv "PORT"))}))
 
-(defn plan [request]
+(defn plan [make-plan request]
   (defn to-para [event]
     [:p
      [:b (:title event)] ", "
@@ -22,4 +24,7 @@
             [:title "Week plan"]]
            [:body
             [:h1 "Week plan"]
-            (map to-para (ramblers/get-events (:met-walkers ramblers/group-ids)))]))})
+            (map to-para (make-plan))]))})
+
+(defn make-plan []
+  (ramblers/get-events (:met-walkers ramblers/group-ids)))
