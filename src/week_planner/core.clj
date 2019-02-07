@@ -8,7 +8,6 @@
 (defn -main [& args]
   (jetty/run-jetty plan {:port (Integer/parseInt (System/getenv "PORT"))}))
 
-
 (defn plan [request]
   (defn to-para [event]
     [:p
