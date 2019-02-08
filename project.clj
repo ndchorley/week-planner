@@ -9,4 +9,3 @@
   :main week-planner.core
   :aot [week-planner.core]
   :uberjar-name "week-planner-standalone.jar")
-

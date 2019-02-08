@@ -31,4 +31,6 @@
             (map to-para (make-plan))]))})
 
 (defn make-plan []
-  (ramblers/get-events (:met-walkers ramblers/group-ids)))
+  (sort-by :date-time (concat
+                       (ramblers/get-events (:met-walkers ramblers/group-ids))
+                       (ramblers/get-events (:hike-essex ramblers/group-ids)))))

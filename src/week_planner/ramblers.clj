@@ -5,7 +5,7 @@
 
 (declare to-event)
 
-(def group-ids {:met-walkers "IL50"})
+(def group-ids {:met-walkers "IL50" :hike-essex "ES50"})
 
 (defn get-events [group-id]
   (def document (.get (Jsoup/connect
