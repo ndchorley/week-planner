@@ -8,7 +8,10 @@
 (defn -main [& args]
   (jetty/run-jetty
    (partial plan make-plan)
-   {:port (Integer/parseInt (System/getenv "PORT"))}))
+   {:port (Integer/parseInt
+           (if (nil? (System/getenv "PORT"))
+             "9000"
+             (System/getenv "PORT")))}))
 
 (defn plan [make-plan request]
   (defn to-para [event]
