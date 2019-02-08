@@ -1,5 +1,6 @@
 (ns week-planner.ramblers
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [java-time])
   (:import [org.jsoup Jsoup]))
 
 (declare to-event)
@@ -18,9 +19,11 @@
   (def a-element (first (.getElementsByTag element "a")))
   (def subtitles (.getElementsByClass element "subtitle"))
 
-  (def date-time (str
-                  (str/replace (.text (first subtitles)) (re-pattern " \\(.*\\)") "")
-                  (str/replace (.text (second subtitles)) "Start time" "")))
+  (def date-time (java-time/local-date-time
+                  (java-time/formatter "EEEE, d MMMM uuuu H:mm")
+                  (str
+                   (str/replace (.text (first subtitles)) (re-pattern " \\(.*\\)") "")
+                   (str/replace (.text (second subtitles)) "Start time" ""))))
 
   (def route (.text a-element))
 
