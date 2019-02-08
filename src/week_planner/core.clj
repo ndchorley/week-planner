@@ -1,7 +1,8 @@
 (ns week-planner.core (:gen-class)
     (:require [ring.adapter.jetty :as jetty]
               [hiccup.page :as hiccup]
-              [week-planner.ramblers :as ramblers]))
+              [week-planner.ramblers :as ramblers]
+              [java-time]))
 
 (declare plan make-plan)
 
@@ -17,7 +18,7 @@
   (defn to-para [event]
     [:p
      [:b (:title event)] ", "
-     (:date-time event) " "
+     (java-time/format (java-time/formatter "d MMMM uuuu H:mm") (:date-time event)) " "
      [:a {:href (:url event)} "More info"]])
 
   {:status 200
