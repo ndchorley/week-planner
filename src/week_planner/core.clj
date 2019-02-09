@@ -31,13 +31,9 @@
             (map to-para (make-plan))]))})
 
 (defn make-plan []
-  (def events (sort-by
-               :date-time
-               (concat
-                (ramblers/get-events (:met-walkers ramblers/group-ids))
-                (ramblers/get-events (:hike-essex ramblers/group-ids)))))
-
+  (def events (sort-by :date-time (ramblers/get-events)))
   (def today (java-time/local-date))
+
   (take-while
    (fn [e]
      (java-time/before?

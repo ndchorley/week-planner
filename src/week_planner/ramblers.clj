@@ -5,15 +5,17 @@
 
 (declare to-event)
 
-(def group-ids {:met-walkers "IL50" :hike-essex "ES50"})
+(defn get-events []
+  (flatten
+   (map
+    (fn [gid]
+      (def document (.get (Jsoup/connect
+                           (str "https://www.ramblers.org.uk/find-a-walk.aspx?layer=walks&tab=walks&group=" gid))))
 
-(defn get-events [group-id]
-  (def document (.get (Jsoup/connect
-                       (str "https://www.ramblers.org.uk/find-a-walk.aspx?layer=walks&tab=walks&group=" group-id))))
+      (def elements (.getElementsByClass document "details"))
 
-  (def elements (.getElementsByClass document "details"))
-
-  (map to-event elements))
+      (map to-event elements))
+    #{"IL50" "ES50"})))
 
 (defn- to-event [element]
   (def a-element (first (.getElementsByTag element "a")))
