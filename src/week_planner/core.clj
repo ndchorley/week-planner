@@ -14,13 +14,9 @@
              "9000"
              (System/getenv "PORT")))}))
 
-(defn plan [make-plan request]
-  (defn to-para [event]
-    [:p
-     [:b (:title event)] ", "
-     (java-time/format (java-time/formatter "d MMMM uuuu H:mm") (:date-time event)) " "
-     [:a {:href (:url event)} "More info"]])
+(declare to-para)
 
+(defn plan [make-plan request]
   {:status 200
    :body (str
           (hiccup/html5
@@ -28,15 +24,36 @@
             [:title "Week plan"]]
            [:body
             [:h1 "Week plan"]
-            (map to-para (make-plan))]))})
+            (map
+             (fn [date-events]
+               (def date (first date-events))
+               (def events (last date-events))
+
+               (cons
+                [:p [:b (java-time/format (java-time/formatter "EEEE, d MMMM") date)]]
+                (map to-para events)))
+             (make-plan))]))})
+
+(defn to-para [event]
+  [:p
+   (java-time/format (java-time/formatter "H:mm") (:date-time event)) " "
+   (:title event) " "
+   [:a {:href (:url event)} "More info"]])
+
+
+(declare in-week-ahead?)
 
 (defn make-plan []
   (def events (sort-by :date-time (ramblers/get-events)))
   (def today (java-time/local-date))
 
-  (take-while
-   (fn [e]
-     (java-time/before?
-      (java-time/local-date (:date-time e))
-      (java-time/plus today (java-time/days 7))))
-   events))
+  (into
+   (sorted-map)
+   (group-by
+    (fn [e] (java-time/local-date (:date-time e)))
+    (take-while in-week-ahead? events))))
+
+(defn in-week-ahead? [event]
+  (java-time/before?
+   (java-time/local-date (:date-time event))
+   (java-time/plus today (java-time/days 7))))
