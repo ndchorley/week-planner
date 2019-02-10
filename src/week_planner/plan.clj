@@ -5,16 +5,15 @@
 (declare in-week-ahead?)
 
 (defn make-plan []
-  (def events (sort-by :date-time (ramblers/get-events)))
-
-  (into
-   (sorted-map)
-   (group-by
-    (fn [e] (java-time/local-date (:date-time e)))
-    (take-while in-week-ahead? events))))
+  (let [events (sort-by :date-time (ramblers/get-events))]
+    (into
+     (sorted-map)
+     (group-by
+      (fn [e] (java-time/local-date (:date-time e)))
+      (take-while in-week-ahead? events)))))
 
 (defn- in-week-ahead? [event]
-  (def today (java-time/local-date))
-  (java-time/before?
-   (java-time/local-date (:date-time event))
-   (java-time/plus today (java-time/days 8))))
+  (let [today (java-time/local-date)]
+    (java-time/before?
+     (java-time/local-date (:date-time event))
+     (java-time/plus today (java-time/days 8)))))
