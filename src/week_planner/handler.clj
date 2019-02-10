@@ -14,12 +14,11 @@
             [:h1 "Week plan"]
             (map
              (fn [date-events]
-               (def date (first date-events))
-               (def events (last date-events))
-
-               (cons
-                [:p [:b (java-time/format (java-time/formatter "EEEE, d MMMM") date)]]
-                (map to-para events)))
+               (let [date (first date-events)
+                     events (last date-events)]
+                 (cons
+                  [:p [:b (java-time/format (java-time/formatter "EEEE, d MMMM") date)]]
+                  (map to-para events))))
              (make-plan))]))})
 
 (defn- to-para [event]
