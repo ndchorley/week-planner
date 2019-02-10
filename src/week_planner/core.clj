@@ -56,4 +56,4 @@
 (defn in-week-ahead? [event]
   (java-time/before?
    (java-time/local-date (:date-time event))
-   (java-time/plus today (java-time/days 7))))
+   (java-time/plus today (java-time/days 8))))
