@@ -6,7 +6,6 @@
 
 (defn make-plan []
   (def events (sort-by :date-time (ramblers/get-events)))
-  (def today (java-time/local-date))
 
   (into
    (sorted-map)
@@ -15,6 +14,7 @@
     (take-while in-week-ahead? events))))
 
 (defn- in-week-ahead? [event]
+  (def today (java-time/local-date))
   (java-time/before?
    (java-time/local-date (:date-time event))
    (java-time/plus today (java-time/days 8))))
