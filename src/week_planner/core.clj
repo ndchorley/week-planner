@@ -4,10 +4,9 @@
               [week-planner.plan :as plan]))
 
 (defn -main [& args]
-  (def port (System/getenv "PORT"))
-
   (jetty/run-jetty
    (partial handler/plan plan/make-plan)
    {:port
-    (Integer/parseInt
-     (if (nil? port) "9000" port))}))
+    (let [port (System/getenv "PORT")]
+         (Integer/parseInt
+          (if (nil? port) "9000" port)))}))
