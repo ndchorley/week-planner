@@ -6,14 +6,13 @@
 (declare to-event)
 
 (defn get-events []
-  (flatten
-   (map
-    (fn [gid]
-      (let [document (.get (Jsoup/connect
-                            (str "https://www.ramblers.org.uk/find-a-walk.aspx?layer=walks&tab=walks&group=" gid)))
-            elements (.getElementsByClass document "details")]
-        (map to-event elements)))
-    #{"IL50" "ES50"})))
+  (mapcat
+   (fn [gid]
+     (let [document (.get (Jsoup/connect
+                           (str "https://www.ramblers.org.uk/find-a-walk.aspx?layer=walks&tab=walks&group=" gid)))
+           elements (.getElementsByClass document "details")]
+       (map to-event elements)))
+   #{"IL50" "ES50"}))
 
 (defn- to-event [element]
   (let [a-element (first (.getElementsByTag element "a"))
