@@ -3,8 +3,9 @@
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [hiccup "2.0.0-alpha2"]
-                 [org.jsoup/jsoup "1.11.3"]
-                 [clojure.java-time "0.3.2"]]
+                 [clojure.java-time "0.3.2"]
+                 [hickory "0.7.1"]
+                 [clj-http "3.9.1"]]
   :min-lein-version "2.0.0"
   :main week-planner.core
   :aot [week-planner.core]
