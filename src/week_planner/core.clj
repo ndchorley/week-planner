@@ -1,11 +1,10 @@
 (ns week-planner.core (:gen-class)
     (:require [ring.adapter.jetty :as jetty]
-              [week-planner.handler :as handler]
-              [week-planner.plan :as plan]))
+              [week-planner.handler :as handler]))
 
 (defn -main [& args]
   (jetty/run-jetty
-   (partial handler/plan plan/make-plan)
+   handler/plan
    {:port
     (let [port (System/getenv "PORT")]
          (Integer/parseInt

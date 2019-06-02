@@ -1,10 +1,11 @@
 (ns week-planner.handler
   (:require [hiccup.page :as hiccup]
-            [java-time]))
+            [java-time]
+            [week-planner.plan :as plan]))
 
 (declare to-para)
 
-(defn plan [make-plan request]
+(defn plan [request]
   {:status 200
    :body (str
           (hiccup/html5
@@ -19,7 +20,7 @@
                  (cons
                   [:p [:b (java-time/format (java-time/formatter "EEEE, d MMMM") date)]]
                   (map to-para events))))
-             (make-plan))]))})
+             (plan/make-plan))]))})
 
 (defn- to-para [event]
   [:p
